@@ -18,25 +18,25 @@ public class AlphaBetaPrunner {
 		this.default_min = default_min;
 	}
 
-	public int max (Board board, int player,  int alpha, int beta, int depth) {
-		if (cutoffTest(board, depth))
+	private int max (Board board, int player,  int alpha, int beta, int depth) {
+		if (cutoffTest(board, depth, alpha, beta))
 			return alpha;
-		List< Option > options = board.getAvailableMoves(player); //replace with real function
+		List< Option > options = board.getAvailableMoves(player); 
 		if (options.size() == 0)
 			return alpha;
 		int ft = beta;
 		for (Option opt : options) {
 			Board new_board = addOptionToBoard(board, player, opt);
 			ft = min(new_board, getNextPlayer(player), alpha, beta, depth +1);
-			int a = Math.max(alpha, ft);
+			alpha = Math.max(alpha, ft);
 		}
 		if (alpha >= ft)
 				return ft;	
 		return alpha;
 	}
 	
-	public int min(Board board, int player,  int alpha, int ft, int depth) {
-		if (cutoffTest(board, depth))
+	private int min(Board board, int player,  int alpha, int ft, int depth) {
+		if (cutoffTest(board, depth, alpha, ft))
 			return ft;
 		List< Option > options = board.getAvailableMoves(player); //replace with real function
 		if (options.size() == 0)
@@ -64,8 +64,8 @@ public class AlphaBetaPrunner {
 		return bestOption;
 	}
 
-	private boolean cutoffTest(Board board, int depth) {
-		if (depth == this.max_depth)
+	private boolean cutoffTest(Board board, int depth, int alpha, int beta) {
+		if (depth == this.max_depth || alpha == beta)
 			return true;
 		else
 			return false;
@@ -77,7 +77,7 @@ public class AlphaBetaPrunner {
 	}
 	
 	private Board addOptionToBoard(Board board, int player, Option option) {
-		Board new_board = board.getCopy(); //replace with real copy constructor
+		Board new_board = board.getCopy();
 		new_board.placePiece(option.i, option.j, player);
 		return new_board;
 	}
