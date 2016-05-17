@@ -21,7 +21,7 @@ public class AlphaBetaPrunner {
 	public int max (Board board, int player,  int alpha, int beta, int depth) {
 		if (cutoffTest(board, depth))
 			return alpha;
-		List< Option > options = getOptions(board); //replace with real function
+		List< Option > options = board.getAvailableMoves(player); //replace with real function
 		if (options.size() == 0)
 			return alpha;
 		int ft = beta;
@@ -38,7 +38,7 @@ public class AlphaBetaPrunner {
 	public int min(Board board, int player,  int alpha, int ft, int depth) {
 		if (cutoffTest(board, depth))
 			return ft;
-		List< Option > options = getOptions(board); //replace with real function
+		List< Option > options = board.getAvailableMoves(player); //replace with real function
 		if (options.size() == 0)
 			return ft;
 		for (Option opt : options) {
@@ -51,9 +51,9 @@ public class AlphaBetaPrunner {
 	}
 	
 	public Option getNextMove(Board board, int player) {
-		List< Option > options = getOptions(board); //replace with real function
+		List< Option > options = board.getAvailableMoves(player); //replace with real function
 		int max = -1;
-		Option bestOption;
+		Option bestOption = null;
 		for (Option opt : options) {
 			int m = max(addOptionToBoard(board, player, opt), player, this.default_max, this.default_min, 1);
 			if (m > max) {
@@ -62,7 +62,6 @@ public class AlphaBetaPrunner {
 			}
 		}
 		return bestOption;
-
 	}
 
 	private boolean cutoffTest(Board board, int depth) {
@@ -78,7 +77,8 @@ public class AlphaBetaPrunner {
 	}
 	
 	private Board addOptionToBoard(Board board, int player, Option option) {
-		Board new_board = new Board(board); //replace with real copy constructor
+		Board new_board = board.getCopy(); //replace with real copy constructor
 		new_board.placePiece(option.i, option.j, player);
+		return new_board;
 	}
 }

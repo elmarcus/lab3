@@ -1,9 +1,18 @@
 package game;
 
 public class Option {
-	int numOfFlips;
-	int i;
-	int j;
+	
+	public int numOfFlips;
+	public int i;
+	public int j;
+	
+	public Option(int n, int i, int j)
+	{
+		this.i = i;
+		this.j = j;
+		this.numOfFlips = n;
+	}
+
 	
 	
 }
