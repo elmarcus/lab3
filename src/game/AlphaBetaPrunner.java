@@ -55,7 +55,7 @@ public class AlphaBetaPrunner {
 		int max = -1;
 		Option bestOption = null;
 		for (Option opt : options) {
-			int m = max(addOptionToBoard(board, player, opt), player, this.default_max, this.default_min, 1);
+			int m = max(addOptionToBoard(board, player, opt), player, this.default_min, this.default_max, 1);
 			if (m > max) {
 				max = m;
 				bestOption = opt;
