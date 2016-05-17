@@ -77,8 +77,14 @@ public class AlphaBetaPrunner {
 	}
 	
 	private Board addOptionToBoard(Board board, int player, Option option) {
-		Board new_board = board.getCopy();
-		new_board.placePiece(option.i, option.j, player);
+		Board new_board = board.getCopy(); //replace with real copy constructor
+		try{
+			new_board.placePiece(option.i, option.j, player);
+		}
+		catch(Exception e)
+		{
+			System.err.println("INVALID  MOVE. ALPHA BETA PRUNING");
+		}
 		return new_board;
 	}
 }

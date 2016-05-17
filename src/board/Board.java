@@ -54,7 +54,7 @@ public class Board {
 		}
 	}
 
-	public void placePiece(int i, int j, int player)
+	public void placePiece(int i, int j, int player) throws Exception
 	{
 		if(player == 1)
 		{
@@ -64,6 +64,9 @@ public class Board {
 		{
 			playerTwoPieces.add(new Piece(i,j, player));
 		}
+		
+		if(board[i][j].getPlayer() != 0)
+			throw new Exception();
 		
 		board[i][j].setPlayer(player);
 	}

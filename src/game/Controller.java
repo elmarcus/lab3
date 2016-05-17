@@ -35,10 +35,17 @@ public class Controller {
 		SmartPlayer player2 = new SmartPlayer();
 		
 		//setup phase
+		try
+		{
 		board.placePiece(boardSize/2 , boardSize/2, 1);
 		board.placePiece(boardSize/2+1 , boardSize/2+1, 1);
 		board.placePiece(boardSize/2+1 , boardSize/2, 2);
 		board.placePiece(boardSize/2 , boardSize/2+1, 2);
+		}
+		catch(Exception e)
+		{
+			System.err.println("I have no idea how this happened");
+		}
 		
 		
 		int round = 0;
@@ -61,7 +68,23 @@ public class Controller {
 			}
 			else
 			{
-				System.out.println("Choose a row and column");
+				while(true)
+				{
+					System.out.println("Choose a row and column");
+					int row = s.nextInt();
+					int col = s.nextInt();
+					
+					try
+					{
+						board.placePiece(row, col, 1); 
+					}
+					catch(Exception e)
+					{
+						continue;
+					}
+					
+					break;
+				}
 			}
 			
 			//PLAYER 2 TURN
