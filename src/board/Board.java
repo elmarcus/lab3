@@ -106,7 +106,7 @@ public class Board {
 						i += iDir;
 						j += jDir;
 						
-						if(i == size || j == size)
+						if(i == size || i < 0 || j == size || j < 0)
 							break;
 						else if(board[i][j].getPlayer() == 0)
 						{
@@ -115,7 +115,6 @@ public class Board {
 						}
 						else
 							f++;
-
 					}
 				}
 			}
@@ -189,5 +188,5 @@ public class Board {
 	}
 	
 	
-
+	
 }
