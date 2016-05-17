@@ -13,6 +13,9 @@ public class Controller {
 	{
 		int boardSize = Integer.parseInt(args[0]);
 		boolean human = false;
+		AlphaBetaPrunner abp = new AlphaBetaPrunner(-1, boardSize, boardSize);
+				
+		Board board = new Board(boardSize);
 		
 		boardSize&=0xFE;
 		
@@ -20,8 +23,7 @@ public class Controller {
 		
 		Scanner s = new Scanner(System.in);
 		String userInput = s.next();
-		
-		Board board = new Board(boardSize);
+
 		
 		if(userInput.toLowerCase().equals("y"))
 		{
@@ -55,16 +57,20 @@ public class Controller {
 		while(pass)
 		{
 			round++;
-			//PLAYER 1 TURN
 			System.out.println("ROUND: " + Integer.toString(round));
 			board.print();
 			
+			//PLAYER 1 TURN
 			if(!human) 
 			{
-				List<Option> options = board.getAvailableMoves(1);
+				Option option = abp.getNextMove(board, 1);
 				//do stuff with alpha beta pruning
 				//make move
-				board.placePiece(p.i, p.j, 1);
+				try {
+					board.placePiece(option.i, option.j, 1);
+				} catch (Exception e) {
+					System.err.println("MOVE EXCEPTION.PLAYER 1");
+				}
 			}
 			else
 			{
@@ -88,8 +94,13 @@ public class Controller {
 			}
 			
 			//PLAYER 2 TURN
-			List<Option> options = board.getAvailableMoves(2);
-			board.placePiece(p.i, p.j, 2);
+			Option option = abp.getNextMove(board, 2);
+			
+			try {
+				board.placePiece(option.i, option.j, 2);
+			} catch (Exception e) {
+				System.err.println("MOVE EXCEPTION.PLAYER 2");
+			}
 		}
 		
 	}
