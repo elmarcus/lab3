@@ -122,7 +122,7 @@ public class Controller {
 			else pass++;
 		}
 		
-		board.findScore();
+//		board.findScore();
 
 	}
 }
