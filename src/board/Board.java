@@ -36,6 +36,10 @@ public class Board {
 
 	}
 
+	public int getSize() {
+		return this.size;
+	}
+	
 	public void print()
 	{
 		StringBuilder ln = null;

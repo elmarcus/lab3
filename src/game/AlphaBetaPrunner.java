@@ -10,12 +10,14 @@ public class AlphaBetaPrunner {
 	private int max_depth;
 	private int default_max;
 	private int default_min;
+	private boolean smart = false;
 	
-	public AlphaBetaPrunner(int max_depth, int default_max, int default_min) {
+	public AlphaBetaPrunner(int max_depth, int default_max, int default_min, boolean smart) {
 		super();
 		this.max_depth = max_depth;
 		this.default_max = default_max;
 		this.default_min = default_min;
+		this.smart = smart;
 	}
 
 	private int max (Board board, int player,  int alpha, int beta, int depth, int max_score, int min_score) {
@@ -24,6 +26,9 @@ public class AlphaBetaPrunner {
 		List< Option > options = board.getAvailableMoves(player); 
 		if (options.size() == 0)
 			return max_score;
+		if (this.smart) {
+			options = sortByPriority(options, board.getSize());
+		}
 		int ft = beta;
 		for (Option opt : options) {
 			Board new_board = addOptionToBoard(board, player, opt);
@@ -41,6 +46,9 @@ public class AlphaBetaPrunner {
 		List< Option > options = board.getAvailableMoves(player); //replace with real function
 		if (options.size() == 0)
 			return min_score;
+		if (this.smart) {
+			options = sortByPriority(options, board.getSize());
+		}
 		for (Option opt : options) {
 			Board new_board = addOptionToBoard(board, player, opt);
 			ft -= Math.min( ft, max(new_board, getNextPlayer(player), alpha, ft, depth +1, max_score, min_score + opt.numOfFlips)); ///
@@ -54,6 +62,9 @@ public class AlphaBetaPrunner {
 		List< Option > options = board.getAvailableMoves(player); //replace with real function
 		int max = -1;
 		Option bestOption = null;
+		if (this.smart) {
+			options = sortByPriority(options, board.getSize());
+		}
 		for (Option opt : options) {
 			Board new_board = addOptionToBoard(board, player, opt);
 			int new_player = getNextPlayer(player);
@@ -88,5 +99,42 @@ public class AlphaBetaPrunner {
 			System.err.println("INVALID  MOVE. ALPHA BETA PRUNING");
 		}
 		return new_board;
+	}
+	
+	private List <Option> sortByPriority(List <Option> options, int board_size) {
+		Map <Double, Option> sorted_options = new HashMap <Double, Option> ();
+		for (int i = 0; i < options.size(); i++) {
+			sorted_options.put(getPriority(options.get(i), board_size), options.get(i));
+		}
+		return new ArrayList(sorted_options.values());
+	}
+	
+	
+	private double getPriority(Option option, int board_size) {
+		
+		//weights
+		double edgeWeight = -0.5;
+		double cornerWeight = 2;
+		double gainWeight = 1;
+		double nearCornerWeight = -1;
+		
+		double priority = 0;
+		
+		if (option.i == 0 || option.i == board_size-1)
+			if (option.j == 0 || option.j == board_size - 1)
+				priority += cornerWeight;
+			else if (option.j == 1 || option.j == board_size - 2) 	
+				priority += nearCornerWeight;
+			else
+				priority += edgeWeight;
+		if (option.j == 0 || option.j == board_size-1)
+			if (option.i == 1 || option.i == board_size - 2) 	
+				priority += nearCornerWeight;
+			else
+				priority += edgeWeight;
+		priority += gainWeight * ( option.numOfFlips / (board_size - 2) );
+		
+		return priority;
+
 	}
 }
