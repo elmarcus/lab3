@@ -18,16 +18,16 @@ public class AlphaBetaPrunner {
 		this.default_min = default_min;
 	}
 
-	private int max (Board board, int player,  int alpha, int beta, int depth) {
+	private int max (Board board, int player,  int alpha, int beta, int depth, int max_score, int min_score) {
 		if (cutoffTest(board, depth, alpha, beta))
-			return alpha;
+			return max_score;
 		List< Option > options = board.getAvailableMoves(player); 
 		if (options.size() == 0)
-			return alpha;
+			return max_score;
 		int ft = beta;
 		for (Option opt : options) {
 			Board new_board = addOptionToBoard(board, player, opt);
-			ft = min(new_board, getNextPlayer(player), alpha, beta, depth +1);
+			ft = min(new_board, getNextPlayer(player), alpha, beta, depth +1, max_score + opt.numOfFlips, min_score); ///
 			alpha = Math.max(alpha, ft);
 		}
 		if (alpha >= ft)
@@ -35,15 +35,15 @@ public class AlphaBetaPrunner {
 		return alpha;
 	}
 	
-	private int min(Board board, int player,  int alpha, int ft, int depth) {
+	private int min(Board board, int player,  int alpha, int ft, int depth, int max_score, int min_score) {
 		if (cutoffTest(board, depth, alpha, ft))
-			return ft;
+			return min_score;
 		List< Option > options = board.getAvailableMoves(player); //replace with real function
 		if (options.size() == 0)
-			return ft;
+			return min_score;
 		for (Option opt : options) {
 			Board new_board = addOptionToBoard(board, player, opt);
-			ft = Math.min( ft, max(new_board, getNextPlayer(player), alpha, ft, depth +1));
+			ft = Math.min( ft, max(new_board, getNextPlayer(player), alpha, ft, depth +1, max_score, min_score + opt.numOfFlips)); ///
 			if (ft < alpha)
 				return alpha;
 		}
@@ -55,7 +55,7 @@ public class AlphaBetaPrunner {
 		int max = -1;
 		Option bestOption = null;
 		for (Option opt : options) {
-			int m = max(addOptionToBoard(board, player, opt), player, this.default_min, this.default_max, 1);
+			int m = max(addOptionToBoard(board, player, opt), player, this.default_min, this.default_max, 1, opt.numOfFlips, 0);
 			if (m > max) {
 				max = m;
 				bestOption = opt;
