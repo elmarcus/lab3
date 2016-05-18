@@ -43,7 +43,7 @@ public class AlphaBetaPrunner {
 			return min_score;
 		for (Option opt : options) {
 			Board new_board = addOptionToBoard(board, player, opt);
-			ft = Math.min( ft, max(new_board, getNextPlayer(player), alpha, ft, depth +1, max_score, min_score + opt.numOfFlips)); ///
+			ft -= Math.min( ft, max(new_board, getNextPlayer(player), alpha, ft, depth +1, max_score, min_score + opt.numOfFlips)); ///
 			if (ft < alpha)
 				return alpha;
 		}
@@ -55,7 +55,9 @@ public class AlphaBetaPrunner {
 		int max = -1;
 		Option bestOption = null;
 		for (Option opt : options) {
-			int m = max(addOptionToBoard(board, player, opt), player, this.default_min, this.default_max, 1, opt.numOfFlips, 0);
+			Board new_board = addOptionToBoard(board, player, opt);
+			int new_player = getNextPlayer(player);
+			int m = min(new_board, new_player, this.default_min, this.default_max, 1, opt.numOfFlips, 0);
 			if (m > max) {
 				max = m;
 				bestOption = opt;
