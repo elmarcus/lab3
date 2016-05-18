@@ -79,24 +79,62 @@ public class Board {
 			throw new Exception();
 
 		board[o.i][o.j].setPlayer(player);
-
-		if(o.piecesToFlip.size() != 0)
+		
+		
+		flipPieces(board[o.i][o.j]);
+	}
+	
+	private void flipPieces(Piece p)
+	{
+		List<Piece> neighbors = getSurroundingValues(p);
+		
+		for(Piece n: neighbors)
 		{
-
-			for(Piece p: o.piecesToFlip)
+			if(n.getPlayer() != p.getPlayer() && n.getPlayer() != 0)
 			{
-				board[p.getI()][p.getJ()].setPlayer(player);
-				if(player == 1)
+				int yDir = p.getJ() - n.getJ();
+				int xDir = p.getI() - n.getI(); 
+				int i = n.getI();
+				int j = n.getJ();
+				List<Piece> flipList = new ArrayList<Piece>();
+				flipList.add(n);
+				
+				while(true)
 				{
-					playerOnePieces.add(new Piece(p.getI(),p.getJ(), player));
-					playerTwoPieces.remove(p);
-				}
-				else
-				{
-					playerTwoPieces.add(new Piece(p.getI(),p.getJ(), player));
-					playerOnePieces.remove(p);
+					i += xDir;
+					j += yDir;
+					
+					if(i == size || j == size || i < 0 || j < 0)
+					{
+						break;
+					}
+					
+					else if(board[i][j].getPlayer() == p.getPlayer())
+					{
+						for(Piece t: flipList)
+						{
+							t.setPlayer(p.getPlayer());
+							if(p.getPlayer() == 1)
+							{
+								playerOnePieces.add(p);
+								playerTwoPieces.remove(p);
+							}
+							else
+							{
+								playerTwoPieces.add(p);
+								playerOnePieces.remove(p);
+							}
+						}
+						break;
+					}
+					
+					else
+					{
+						flipList.add(board[i][j]);
+					}
 				}
 			}
+
 		}
 	}
 
