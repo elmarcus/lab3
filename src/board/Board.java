@@ -9,14 +9,14 @@ public class Board {
 	private List<Piece> playerOnePieces;
 	private List<Piece> playerTwoPieces;
 	private int size = 0;
-	
+
 	public Board(int size)
 	{
 		board = new Piece[size][size];
 		playerOnePieces = new ArrayList<Piece>();
 		playerTwoPieces = new ArrayList<Piece>();
 		this.size = size;
-		
+
 		for(int i = 0; i < size; i++)
 		{
 			for(int j = 0; j < size; j++)
@@ -24,22 +24,28 @@ public class Board {
 				board[i][j] = new Piece(i, j, 0);
 			}
 		}
+
+		board[size/2][size/2].setPlayer(1);
+		board[size/2-1][size/2-1].setPlayer(1);
+		board[size/2-1][size/2].setPlayer(2);
+		board[size/2][size/2-1].setPlayer(2);
+
 	}
-	
+
 	public void print()
 	{
 		StringBuilder ln = null;
-		
+
 		for(int i = 0; i < size; i++)
 		{
 			ln = new StringBuilder();
-			
+
 			for(int j = 0; j < size; j++)
 			{
-				if(board[i][j] == null)
+				if(board[i][j].getPlayer() == 0)
 				{
 					ln.append("- ");
-				
+
 				}
 				else if(board[i][j].getPlayer() == 1)
 				{
@@ -54,29 +60,48 @@ public class Board {
 		}
 	}
 
-	public void placePiece(int i, int j, int player) throws Exception
+	public void placePiece(Option o, int player) throws Exception
 	{
 		if(player == 1)
 		{
-			playerOnePieces.add(new Piece(i,j, player));
+			playerOnePieces.add(new Piece(o.i,o.j, player));
 		}
 		else
 		{
-			playerTwoPieces.add(new Piece(i,j, player));
+			playerTwoPieces.add(new Piece(o.i,o.j, player));
 		}
-		
-		if(board[i][j].getPlayer() != 0)
+
+		if(board[o.i][o.j].getPlayer() != 0)
 			throw new Exception();
-		
-		board[i][j].setPlayer(player);
+
+		board[o.i][o.j].setPlayer(player);
+
+		if(o.piecesToFlip.size() != 0)
+		{
+
+			for(Piece p: o.piecesToFlip)
+			{
+				board[p.getI()][p.getJ()].setPlayer(player);
+				if(player == 1)
+				{
+					playerOnePieces.add(new Piece(p.getI(),p.getJ(), player));
+					playerTwoPieces.remove(p);
+				}
+				else
+				{
+					playerTwoPieces.add(new Piece(p.getI(),p.getJ(), player));
+					playerOnePieces.remove(p);
+				}
+			}
+		}
 	}
-	
+
 	public List<Option> getAvailableMoves(int player)
 	{
 		List<Option> availableMoves = new ArrayList<Option>();
 		List<Piece> piecesToScan;
 		int opponent;
-		
+
 		if(player == 1)
 		{
 			opponent = 2;
@@ -87,28 +112,28 @@ public class Board {
 			opponent = 1;
 			piecesToScan = playerTwoPieces;
 		}
-		
+
 		for(Piece p: piecesToScan)
 		{
 			List<Piece> neighbors = getSurroundingValues(p);
-			
+
 			for(Piece n: neighbors)
 			{
 				if(n.getPlayer() == opponent)
 				{
 					int iDir = p.getI() - n.getI(); 
 					int jDir = p.getJ() - n.getJ();
-					
+
 					int i = n.getI();
 					int j = n.getJ();
-					
+
 					int f = 1;
-					
+
 					while(true)
 					{
 						i += iDir;
 						j += jDir;
-						
+
 						if(i == size || i < 0 || j == size || j < 0)
 							break;
 						else if(board[i][j].getPlayer() == 0)
@@ -122,40 +147,40 @@ public class Board {
 				}
 			}
 		}
-		
+
 		return availableMoves;
 	}
-	
+
 	public List<Piece> getSurroundingValues(Piece p)
 	{
 		List<Piece> values = new ArrayList<Piece>();
-		
+
 		if(p.getI() - 1 >= 0)
 		{
 			values.add(board[p.getI()-1][p.getJ()]);
-			
+
 			if(p.getJ() - 1 >= 0)
 				values.add(board[p.getI()-1][p.getJ()-1]);
-			
+
 			if(p.getJ() + 1 != size)
 				values.add(board[p.getI()-1][p.getJ()+1]);
 		}
-		
+
 		if(p.getI() + 1 != size)
 		{
 			values.add(board[p.getI()+1][p.getJ()]);
-			
+
 			if(p.getJ() - 1 >= 0)
 				values.add(board[p.getI()+1][p.getJ()-1]);
 			if(p.getJ() + 1 != size)
 				values.add(board[p.getI()+1][p.getJ()+1]);
 		}
-		
+
 		if(p.getJ() - 1 >= 0)
 		{
 			values.add(board[p.getI()][p.getJ()-1]);
 		}
-		
+
 		if(p.getJ() + 1 != size)
 		{
 			values.add(board[p.getI()][p.getJ()+1]);
@@ -163,14 +188,14 @@ public class Board {
 
 		return values;
 	}
-	
+
 	public Board getCopy()
 	{
 		Board b = new Board(this.size);
 		b.setBoard(this.board);
 		b.setPlayerOnePieces(this.playerOnePieces);
 		b.setPlayerTwoPieces(this.playerTwoPieces);
-		
+
 		return b;
 	}
 
@@ -189,7 +214,27 @@ public class Board {
 	public void setSize(int size) {
 		this.size = size;
 	}
-	
-	
-	
+
+	public void findScore() {
+
+		if(playerOnePieces.size() > playerTwoPieces.size())
+		{
+			System.out.println("PLAYER 1 WINS!");
+
+		}
+		else if(playerOnePieces.size() < playerTwoPieces.size())
+		{
+			System.out.println("PLAYER 2 WINS!");
+		}
+		else
+		{
+			System.out.println("DRAW");
+		}
+
+		System.out.println("PLAYER 1: " + Integer.toString(playerOnePieces.size()));
+		System.out.println("PLAYER 2: " + Integer.toString(playerTwoPieces.size()));
+	}
+
+
+
 }
