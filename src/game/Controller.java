@@ -24,6 +24,8 @@ public class Controller {
 			System.out.println("Select board size");
 			boardSize = s.nextInt();
 			boardSize&=0xFE;
+			boardSize = Math.max(boardSize, 8);
+			System.out.println("Board Size is: "+Integer.toString(boardSize));
 			board = new Board(boardSize);
 			abp = new AlphaBetaPrunner(-1, boardSize, boardSize);
 
