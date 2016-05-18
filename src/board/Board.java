@@ -92,8 +92,8 @@ public class Board {
 		{
 			if(n.getPlayer() != p.getPlayer() && n.getPlayer() != 0)
 			{
-				int yDir = p.getJ() - n.getJ();
-				int xDir = p.getI() - n.getI(); 
+				int yDir = -1 * (p.getJ() - n.getJ());
+				int xDir = -1 * (p.getI() - n.getI()); 
 				int i = n.getI();
 				int j = n.getJ();
 				List<Piece> flipList = new ArrayList<Piece>();
@@ -163,8 +163,8 @@ public class Board {
 			{
 				if(n.getPlayer() == opponent)
 				{
-					int iDir = -1 *(p.getI() - n.getI()); 
-					int jDir = -1*(p.getJ() - n.getJ());
+					int iDir = -1 * (p.getI() - n.getI()); 
+					int jDir = -1 * (p.getJ() - n.getJ());
 
 					int i = n.getI();
 					int j = n.getJ();
@@ -178,9 +178,10 @@ public class Board {
 
 						if(i == size || i < 0 || j == size || j < 0)
 							break;
-						else if(board[i][j].getPlayer() == 0)
+						
+						if(board[i][j].getPlayer() == 0)
 						{
-							availableMoves.add(new Option(f,i,j));
+							availableMoves.add(new Option(f, i, j));
 							break;
 						}
 						else
