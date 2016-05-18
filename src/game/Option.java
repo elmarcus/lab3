@@ -18,7 +18,5 @@ public class Option {
 		this.j = j;
 		this.numOfFlips = n;
 	}
-
-	
 	
 }
