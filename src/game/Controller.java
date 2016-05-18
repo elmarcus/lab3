@@ -53,21 +53,21 @@ public class Controller {
 		int round = 0;
 		int pass = 0;
 		System.out.println(boardSize);
-		
+
 		//play game phase
 		while(pass < 2)
 		{
 			pass = 0;
 			round++;
 			System.out.println("ROUND: " + Integer.toString(round));
-			board.print();
+
 
 			//PLAYER 1 TURN
 			if(!human) 
 			{
+				board.print();
 				Option option = abp.getNextMove(board, 1);
-				//do stuff with alpha beta pruning
-				//make move
+
 				if(option != null)
 				{
 					try {
@@ -105,6 +105,7 @@ public class Controller {
 
 			if(option != null)
 			{
+				board.print();
 				try {
 					board.placePiece(option, 2);
 				} catch (Exception e) {
@@ -113,7 +114,7 @@ public class Controller {
 			}
 			else pass++;
 		}
-		
+
 		board.findScore();
 
 	}
