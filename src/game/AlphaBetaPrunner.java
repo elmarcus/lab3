@@ -79,7 +79,7 @@ public class AlphaBetaPrunner {
 	private Board addOptionToBoard(Board board, int player, Option option) {
 		Board new_board = board.getCopy(); //replace with real copy constructor
 		try{
-			new_board.placePiece(option.i, option.j, player);
+			new_board.placePiece(option, player);
 		}
 		catch(Exception e)
 		{

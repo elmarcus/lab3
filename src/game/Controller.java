@@ -16,7 +16,8 @@ public class Controller {
 		AlphaBetaPrunner abp = null;
 		int boardSize = 0;
 		Board board = null;
-
+		SmartPlayer player1 = null;
+		SmartPlayer player2 = null;
 
 		Scanner s = new Scanner(System.in);
 		while(true)
@@ -38,25 +39,14 @@ public class Controller {
 			}
 			else
 			{
-				SmartPlayer player1 = new SmartPlayer();
+				player1 = new SmartPlayer();
 				break;
 			}
 		}
 
-		SmartPlayer player2 = new SmartPlayer();
+		player2 = new SmartPlayer();
 
 		//setup phase
-		try
-		{
-			board.placePiece(boardSize/2 , boardSize/2, 1);
-			board.placePiece(boardSize/2+1 , boardSize/2+1, 1);
-			board.placePiece(boardSize/2+1 , boardSize/2, 2);
-			board.placePiece(boardSize/2 , boardSize/2+1, 2);
-		}
-		catch(Exception e)
-		{
-			System.err.println("I have no idea how this happened");
-		}
 
 		int round = 0;
 		int pass = 0;
@@ -79,7 +69,7 @@ public class Controller {
 				if(option != null)
 				{
 					try {
-						board.placePiece(option.i, option.j, 1);
+						board.placePiece(option, 1);
 					} catch (Exception e) {
 						System.err.println("MOVE EXCEPTION.PLAYER 1");
 					}
@@ -97,7 +87,7 @@ public class Controller {
 
 					try
 					{
-						board.placePiece(row, col, 1); 
+						//board.placePiece(row, col, 1); 
 					}
 					catch(Exception e)
 					{
@@ -114,7 +104,7 @@ public class Controller {
 			if(option != null)
 			{
 				try {
-					board.placePiece(option.i, option.j, 2);
+					board.placePiece(option, 2);
 				} catch (Exception e) {
 					System.err.println("MOVE EXCEPTION.PLAYER 2");
 				}
@@ -122,7 +112,7 @@ public class Controller {
 			else pass++;
 		}
 		
-//		board.findScore();
+		board.findScore();
 
 	}
 }
