@@ -27,8 +27,12 @@ public class Board {
 
 		board[size/2][size/2].setPlayer(1);
 		board[size/2-1][size/2-1].setPlayer(1);
+		playerOnePieces.add(new Piece(size/2,size/2, 1));
+		playerOnePieces.add(new Piece(size/2-1,size/2-1, 1));
 		board[size/2-1][size/2].setPlayer(2);
 		board[size/2][size/2-1].setPlayer(2);
+		playerTwoPieces.add(new Piece(size/2-1,size/2, 2));
+		playerTwoPieces.add(new Piece(size/2,size/2-1, 2));
 
 	}
 
@@ -121,8 +125,8 @@ public class Board {
 			{
 				if(n.getPlayer() == opponent)
 				{
-					int iDir = p.getI() - n.getI(); 
-					int jDir = p.getJ() - n.getJ();
+					int iDir = -1 *(p.getI() - n.getI()); 
+					int jDir = -1*(p.getJ() - n.getJ());
 
 					int i = n.getI();
 					int j = n.getJ();
@@ -192,9 +196,24 @@ public class Board {
 	public Board getCopy()
 	{
 		Board b = new Board(this.size);
-		b.setBoard(this.board);
-		b.setPlayerOnePieces(this.playerOnePieces);
-		b.setPlayerTwoPieces(this.playerTwoPieces);
+		Piece new_board[][] = new Piece[size][size];
+		for (int i = 0; i < size; i++){
+			for (int j = 0 ; j < size; j++) {
+				Piece old_piece = this.board[i][j];
+				new_board[i][j] = new Piece(old_piece.getI(), old_piece.getJ(), old_piece.getPlayer());
+			}
+		}
+		b.setBoard(new_board);
+		List<Piece> new_playerOnePieces = new ArrayList<Piece>();
+		for (Piece p : this.playerOnePieces) {
+			new_playerOnePieces.add(new Piece(p.getI(), p.getJ(), p.getPlayer()));
+		}
+		List<Piece> new_playerTwoPieces = new ArrayList<Piece>();
+		for (Piece p : this.playerTwoPieces) {
+			new_playerTwoPieces.add(new Piece(p.getI(), p.getJ(), p.getPlayer()));
+		}
+		b.setPlayerOnePieces(new_playerOnePieces);
+		b.setPlayerTwoPieces(new_playerTwoPieces);
 
 		return b;
 	}
