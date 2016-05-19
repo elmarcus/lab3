@@ -39,7 +39,7 @@ public class Board {
 	public int getSize() {
 		return this.size;
 	}
-	
+
 	public void print()
 	{
 		StringBuilder ln = null;
@@ -48,7 +48,7 @@ public class Board {
 		{
 			System.out.print(Integer.toString(j + 1) + " ");
 		}
-			System.out.print("\n");
+		System.out.print("\n");
 		for(int i = 0; i < size; i++)
 		{
 			ln = new StringBuilder();
@@ -56,7 +56,7 @@ public class Board {
 
 			for(int j = 0; j < size; j++)
 			{
-				
+
 				if(board[i][j].getPlayer() == 0)
 				{
 					ln.append("- ");
@@ -90,15 +90,15 @@ public class Board {
 			throw new Exception();
 
 		board[o.i][o.j].setPlayer(player);
-		
-		
+
+
 		flipPieces(board[o.i][o.j]);
 	}
-	
+
 	private void flipPieces(Piece p)
 	{
 		List<Piece> neighbors = getSurroundingValues(p);
-		
+
 		for(Piece n: neighbors)
 		{
 			if(n.getPlayer() != p.getPlayer() && n.getPlayer() != 0)
@@ -109,17 +109,17 @@ public class Board {
 				int j = n.getJ();
 				List<Piece> flipList = new ArrayList<Piece>();
 				flipList.add(n);
-				
+
 				while(true)
 				{
 					i += xDir;
 					j += yDir;
-					
+
 					if(i == size || j == size || i < 0 || j < 0)
 					{
 						break;
 					}
-					
+
 					else if(board[i][j].getPlayer() == p.getPlayer())
 					{
 						for(Piece t: flipList)
@@ -128,24 +128,46 @@ public class Board {
 							if(p.getPlayer() == 1)
 							{
 								playerOnePieces.add(p);
-								playerTwoPieces.remove(p);
+								List<Piece> newPieces = new ArrayList<Piece>();
+
+								for(Piece w: playerTwoPieces)
+								{
+									if(w.getI() != t.getI() || w.getJ() != t.getJ())
+									{
+										newPieces.add(w);
+									}
+
+
+								}
+								playerTwoPieces = newPieces;
 							}
 							else
 							{
 								playerTwoPieces.add(p);
-								playerOnePieces.remove(p);
+								List<Piece> newPieces = new ArrayList<Piece>();
+
+								for(Piece w: playerOnePieces)
+								{
+									if(w.getI() != t.getI() || w.getJ() != t.getJ())
+									{
+										newPieces.add(w);
+									}
+									
+
+								}
+								
+								playerOnePieces = newPieces;
 							}
 						}
 						break;
 					}
-					
+
 					else
 					{
 						flipList.add(board[i][j]);
 					}
 				}
 			}
-
 		}
 	}
 
@@ -189,7 +211,7 @@ public class Board {
 
 						if(i == size || i < 0 || j == size || j < 0)
 							break;
-						
+
 						if(board[i][j].getPlayer() == 0)
 						{
 							availableMoves.add(new Option(f, i, j));
