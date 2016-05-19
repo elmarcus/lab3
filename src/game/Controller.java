@@ -25,7 +25,7 @@ public class Controller {
 			boardSize = Math.max(boardSize, 4);
 			System.out.println("Board Size is: "+Integer.toString(boardSize));
 			board = new Board(boardSize);
-			abp = new AlphaBetaPrunner(6, boardSize*boardSize, -1*boardSize*boardSize, false);
+			abp = new AlphaBetaPrunner(6, boardSize*boardSize, -1*boardSize*boardSize, true);
 
 			System.out.println("Human Player 1? Y/N");
 
