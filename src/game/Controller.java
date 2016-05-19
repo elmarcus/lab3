@@ -101,6 +101,7 @@ public class Controller {
 
 						if(input == linum)
 						{
+							pass++;
 							break;
 						}
 						
