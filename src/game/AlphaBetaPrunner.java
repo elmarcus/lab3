@@ -102,11 +102,25 @@ public class AlphaBetaPrunner {
 	}
 	
 	private List <Option> sortByPriority(List <Option> options, int board_size) {
-		Map <Double, Option> sorted_options = new HashMap <Double, Option> ();
+		List <Option> sorted_options = new ArrayList <Option> ();
+		List <Double> priorities = new ArrayList <Double> ();
 		for (int i = 0; i < options.size(); i++) {
-			sorted_options.put(getPriority(options.get(i), board_size), options.get(i));
+			double pr = getPriority(options.get(i), board_size);
+			boolean inserted = false;
+			for (int j = 0; j < sorted_options.size(); j++) {
+				if (priorities.get(j) < pr) {
+					sorted_options.set(j, options.get(i));
+					priorities.set(j, pr);
+					inserted = true;
+					break;
+				}
+			}
+			if (!inserted) {
+				sorted_options.add(options.get(i));
+				priorities.add(pr);
+			}
 		}
-		return new ArrayList(sorted_options.values());
+		return sorted_options;
 	}
 	
 	
@@ -132,7 +146,7 @@ public class AlphaBetaPrunner {
 				priority += nearCornerWeight;
 			else
 				priority += edgeWeight;
-		priority += gainWeight * ( option.numOfFlips / (board_size - 2) );
+		priority += gainWeight * ( (double)(option.numOfFlips) / (double)(board_size - 2) );
 		
 		return priority;
 
