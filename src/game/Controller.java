@@ -2,9 +2,8 @@ package game;
 
 import java.util.List;
 import java.util.Scanner;
-
 import board.Board;
-import computerPlayer.*;
+import board.Piece;
 
 public class Controller {
 
@@ -16,8 +15,6 @@ public class Controller {
 		AlphaBetaPrunner abp = null;
 		int boardSize = 0;
 		Board board = null;
-		SmartPlayer player1 = null;
-		SmartPlayer player2 = null;
 
 		Scanner s = new Scanner(System.in);
 		while(true)
@@ -28,7 +25,7 @@ public class Controller {
 			boardSize = Math.max(boardSize, 4);
 			System.out.println("Board Size is: "+Integer.toString(boardSize));
 			board = new Board(boardSize);
-			abp = new AlphaBetaPrunner(-1, boardSize, boardSize, false );
+			abp = new AlphaBetaPrunner(-1, boardSize, boardSize, false);
 
 			System.out.println("Human Player 1? Y/N");
 
@@ -41,19 +38,17 @@ public class Controller {
 			}
 			else
 			{
-				player1 = new SmartPlayer();
 				break;
 			}
 		}
 
-		player2 = new SmartPlayer();
 
 		//setup phase
 
 		int round = 0;
 		int pass = 0;
 		System.out.println(boardSize);
-
+		board.print();
 		//play game phase
 		while(pass < 2)
 		{
@@ -65,7 +60,6 @@ public class Controller {
 			//PLAYER 1 TURN
 			if(!human) 
 			{
-				board.print();
 				Option option = abp.getNextMove(board, 1);
 
 				if(option != null)
@@ -78,18 +72,40 @@ public class Controller {
 				}
 				else
 					pass++;
+				board.print();
 			}
 			else
 			{
 				while(true)
 				{
-					System.out.println("Choose a row and column");
-					int row = s.nextInt();
-					int col = s.nextInt();
+
+					int linum = 1;
+					List<Option> suggestedMoves = board.getAvailableMoves(1);
+					System.out.println("Choose a suggestion");
+					for(Option o: suggestedMoves)
+					{
+						System.out.println("("+Integer.toString(linum) + ") R:" + Integer.toString(o.i + 1) + " C:" + 
+								Integer.toString(o.j + 1));
+						linum++;
+					}
+
+					System.out.println("(" + Integer.toString(linum) + ") Pass");
 
 					try
 					{
-						//board.placePiece(row, col, 1); 
+						int input = 0;
+						input = s.nextInt();
+
+						if(input < 0 || input > linum)
+							continue;
+
+						if(input == linum)
+						{
+							System.out.println("FUCKING HERE");
+							break;
+						}
+						
+						board.placePiece(suggestedMoves.get(input - 1), 1); 
 					}
 					catch(Exception e)
 					{
@@ -105,14 +121,17 @@ public class Controller {
 
 			if(option != null)
 			{
-				board.print();
+
 				try {
 					board.placePiece(option, 2);
 				} catch (Exception e) {
 					System.err.println("MOVE EXCEPTION.PLAYER 2");
 				}
+
 			}
 			else pass++;
+			System.out.println("******************");
+			board.print();
 		}
 
 		board.findScore();

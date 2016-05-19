@@ -43,13 +43,20 @@ public class Board {
 	public void print()
 	{
 		StringBuilder ln = null;
-
+		System.out.print("  ");
+		for(int j = 0; j < size; j++)
+		{
+			System.out.print(Integer.toString(j + 1) + " ");
+		}
+			System.out.print("\n");
 		for(int i = 0; i < size; i++)
 		{
 			ln = new StringBuilder();
+			System.out.print(Integer.toString(i + 1) + " ");
 
 			for(int j = 0; j < size; j++)
 			{
+				
 				if(board[i][j].getPlayer() == 0)
 				{
 					ln.append("- ");
