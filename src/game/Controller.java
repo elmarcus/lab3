@@ -101,7 +101,6 @@ public class Controller {
 
 						if(input == linum)
 						{
-							System.out.println("FUCKING HERE");
 							break;
 						}
 						
